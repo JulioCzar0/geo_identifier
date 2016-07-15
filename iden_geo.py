@@ -1,66 +1,83 @@
 # !/usr/bin/python
 # -*- coding: latin-1 -*-
-import os, sys
+import os
+import PyQt4
+# Se debe cambiar la ruta y colocar la direcciÃ³n en donde se encuentran los archivos. Ejem: 'home\paradigmas\files'
+os.chdir("/home/carlos/Desktop/")
 
-# Se debe cambiar la ruta y colocar la dirección en donde se encuentran los archivos. Ejem: 'home\paradigmas\files'
-os.chdir('C:\Users\JulioCzar\Documents\UCR\Paradigmas\Proyecto\geo_identifier')
+#FunciÃ³n que carga y colorea las capas
+def load_layer (path, name, data_source, color):
+    #Se carga la capa al mapa
+    layer = QgsVectorLayer(path, name, data_source)
+    
+    #Se le aplica el color a la capa
+    symbol = layer.rendererV2().symbol()
+    symbol.setColor(PyQt4.QtGui.QColor(color))
+    
+    # Se agrega la capa al mapa para manejarla y desplegarla en la GUI de QGGIS
+    QgsMapLayerRegistry.instance().addMapLayer(layer)
+    return layer
 
-# Se carga la capa de PROPIEDADES_RodrigoFacio del mapa ------ tener en consideración la ruta del archivo
-property_layerFincas = QgsVectorLayer("Shapefiles_RodrigoFacio\PROPIEDADES_RodrigoFacio.shp", "Fincas", "ogr")
-idFincas = property_layerFincas.id()
-# Se agrega la capa al mapa para manejarla y desplegarla en la GUI de QGGIS
-QgsMapLayerRegistry.instance().addMapLayer(property_layerFincas)
 
-# Se carga la capa de ACERAS_RodrigoFacio del mapa ------ tener en consideración la ruta del archivo
-property_layerAceras = QgsVectorLayer("Shapefiles_RodrigoFacio\ACERAS_RodrigoFacio.shp", "Aceras", "ogr")
-idAceras = property_layerAceras.id()
-# Se agrega la capa al mapa para manejarla y desplegarla en la GUI de QGGIS
-QgsMapLayerRegistry.instance().addMapLayer(property_layerAceras)
+#FunciÃ³n que elimna todas las capas del mapa
+def clear_all_layers():
+    for layer in layers:
+        QgsMapLayerRegistry.instance().removeMapLayer(layers[layer].id())
+    return 
 
-# Se carga la capa de OTROS_RodrigoFacio del mapa ------ tener en consideración la ruta del archivo
-property_layerOtros = QgsVectorLayer("Shapefiles_RodrigoFacio\OTROS_RodrigoFacio.shp", "Otros", "ogr")
-idOtros = property_layerOtros.id()
-# Se agrega la capa al mapa para manejarla y desplegarla en la GUI de QGGIS
-QgsMapLayerRegistry.instance().addMapLayer(property_layerOtros)
+#Función que selecciona elementos de una capa
+#feature attributes es un diccionario
+#layer es una capa del mapa
+def get_features(layer, feature_attribute):
+    selection = []
+    for feature in layer.getFeatures():
+        value = feature.attributes[1]
+        if value == feature.attribute(feature_attribute[0]):
+           selection.append(feature.id())
+           print feature.name()
+    return selection
 
-# Se carga la capa EDIFICIOS_RodrigoFacio PROPIEDADES del mapa ------ tener en consideración la ruta del archivo
-property_layerEdificios = QgsVectorLayer("Shapefiles_RodrigoFacio\EDIFICIOS_RodrigoFacio.shp", "Edificios", "ogr")
-idEdificios = property_layerEdificios.id()
-# Se agrega la capa al mapa para manejarla y desplegarla en la GUI de QGGIS
-QgsMapLayerRegistry.instance().addMapLayer(property_layerEdificios)
+#Función que selecciona elementos de una capa
+#layer es una capa del mapa
+#feature_attribute es una tupla, su primer valor es el atributo y el segundo es el valor buscado
+#para crear una tupla nombre = (valor1, valor2)
+def get_features(layer, feature_attribute):
+    selection = []
+    for feature in layer.getFeatures():
+        value = feature.attribute(feature_attribute[0])
+        if value == feature_attribute[1]:
+           selection.append(feature.id())
+    layer.setSelectedFeatures(selection)       
+    return selection
 
-# Se carga la capa de PARQUEOS_RodrigoFacio del mapa ------ tener en consideración la ruta del archivo
-property_layerParqueos = QgsVectorLayer("Shapefiles_RodrigoFacio\PARQUEOS_RodrigoFacio.shp", "Parqueos", "ogr")
-idParqueos = property_layerParqueos.id()
-# Se agrega la capa al mapa para manejarla y desplegarla en la GUI de QGGIS
-QgsMapLayerRegistry.instance().addMapLayer(property_layerParqueos)
 
-# Se carga la capa de CALLES del mapa ------ tener en consideración la ruta del archivo
-property_layerCalles = QgsVectorLayer("Shapefiles_RodrigoFacio\CALLES_RodrigoFacio.shp", "Calles", "ogr")
-idCalles = property_layerCalles.id()
-# Se agrega la capa al mapa para manejarla y desplegarla en la GUI de QGGIS
-QgsMapLayerRegistry.instance().addMapLayer(property_layerCalles)
+# Se carga la capa de PROPIEDADES_RodrigoFacio del mapa
+fincas_layer = load_layer("Shapefiles_RodrigoFacio/PROPIEDADES_RodrigoFacio.shp", "Fincas", "ogr", "#58a9f0")
 
-#caps = property_layerFincas.dataProvider().capabilities()
-# Check if a particular capability is supported:
-#caps & QgsVectorDataProvider.DeleteFeatures
-# Print 2 if DeleteFeatures is supported
+# Se carga la capa de ACERAS_RodrigoFacio del mapa
+aceras_layer = load_layer("Shapefiles_RodrigoFacio/ACERAS_RodrigoFacio.shp", "Aceras", "ogr", "#906ee5")
 
-iter = property_layerParqueos.getFeatures()
-'''
-for feature in iter:
-    # retrieve every feature with its geometry and attributes
-    # fetch geometry
-    geom = feature.geometry()
-    if feature.id() != 1:
-        res = property_layerParqueos.dataProvider().deleteFeatures([feature.id()])
+# Se carga la capa de OTROS_RodrigoFacio del mapa
+otros_layer = load_layer("Shapefiles_RodrigoFacio/OTROS_RodrigoFacio.shp", "Otros", "ogr", "#93c5f7")
 
+# Se carga la capa EDIFICIOS_RodrigoFacio del mapa
+edificios_layer = load_layer("Shapefiles_RodrigoFacio/EDIFICIOS_RodrigoFacio.shp", "Edificios", "ogr", "#b0f9c5")
+
+# Se carga la capa de PARQUEOS_RodrigoFacio del mapa ------ tener en consideraciÃ³n la ruta del archivo
+parqueos_layer = load_layer("Shapefiles_RodrigoFacio/PARQUEOS_RodrigoFacio.shp", "Parqueos", "ogr", "#78cdca")
+
+# Se carga la capa de CALLES del mapa ------ tener en consideraciÃ³n la ruta del archivo
+calles_layer = load_layer("Shapefiles_RodrigoFacio/CALLES_RodrigoFacio.shp", "Calles", "ogr", "#065ea1")
+
+
+
+
+continue_execution = True
+
+#while continue_execution:    
+#    response = PyQt4.QtGui.QInputDialog.getText(None, "Salir", "Presione ESC para salir.")
+#    continue_execution = response[1]
 
 # Se eliminan todas las capas 
-QgsMapLayerRegistry.instance().removeMapLayer(idFincas)
-QgsMapLayerRegistry.instance().removeMapLayer(idAceras)
-QgsMapLayerRegistry.instance().removeMapLayer(idOtros)
-QgsMapLayerRegistry.instance().removeMapLayer(idEdificios)
-QgsMapLayerRegistry.instance().removeMapLayer(idParqueos)
-QgsMapLayerRegistry.instance().removeMapLayer(idCalles)
-'''
+#clear_all_layers()
+print "Baia baia!"
