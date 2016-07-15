@@ -80,4 +80,8 @@ continue_execution = True
 
 # Se eliminan todas las capas 
 #clear_all_layers()
+<<<<<<< HEAD
 print "Baia baia!"
+=======
+print "Bye bye!"
+>>>>>>> 18de127a9d081e7928839796d62f215c2470a955
