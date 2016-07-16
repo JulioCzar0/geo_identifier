@@ -1,5 +1,5 @@
-Seleccion,En que lugar se encuentra usted en este momento?
-Seleccion,Que tipo de objeto tiene al norte?
-Seleccion,Que tipo de objeto tiene al este?
-Seleccion,Que tipo de objeto tiene al sur?
-Seleccion,Que tipo de objeto tiene al oeste?
+Selection,Seleccione una opcion,En que lugar se encuentra usted en este momento?
+Selection,Seleccione una opcion,Que tipo de objeto tiene al norte?
+Selection,Seleccione una opcion,Que tipo de objeto tiene al este?
+Selection,Seleccione una opcion,Que tipo de objeto tiene al sur?
+Selection,Seleccione una opcion,Que tipo de objeto tiene al oeste?

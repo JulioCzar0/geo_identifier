@@ -30,7 +30,7 @@ with open('preguntas_generales.csv', 'rb') as file:
     reader = csv.reader(file)
     general_questions = map(tuple, reader)
     
-with open('/home/carlos/Desktop/preguntas_especificas.csv', 'rb') as file:
+with open('preguntas_especificas.csv', 'rb') as file:
     reader = csv.reader(file)
     specific_questions = map(tuple, reader)    
 
@@ -63,7 +63,6 @@ user_answer = QMessageBox.question(prompt, window_title, start_message, QMessage
 continue_execution = False
 if user_answer == QMessageBox.Yes:
     continue_execution = True
-
 
 while continue_execution:    
     #Escoge una pregunta del pool de preguntas generales
