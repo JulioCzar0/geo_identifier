@@ -18,24 +18,12 @@ def load_layer (path, name, data_source, color):
     QgsMapLayerRegistry.instance().addMapLayer(layer)
     return layer
 
-
 #FunciÃ³n que elimna todas las capas del mapa
 def clear_all_layers():
+    layers = iface.legendInterface().layers()    
     for layer in layers:
-        QgsMapLayerRegistry.instance().removeMapLayer(layers[layer].id())
+        QgsMapLayerRegistry.instance().removeMapLayer(layer.id())
     return 
-
-#Función que selecciona elementos de una capa
-#feature attributes es un diccionario
-#layer es una capa del mapa
-def get_features(layer, feature_attribute):
-    selection = []
-    for feature in layer.getFeatures():
-        value = feature.attributes[1]
-        if value == feature.attribute(feature_attribute[0]):
-           selection.append(feature.id())
-           print feature.name()
-    return selection
 
 #Función que selecciona elementos de una capa
 #layer es una capa del mapa
@@ -46,10 +34,25 @@ def get_features(layer, feature_attribute):
     for feature in layer.getFeatures():
         value = feature.attribute(feature_attribute[0])
         if value == feature_attribute[1]:
-           selection.append(feature.id())
-    layer.setSelectedFeatures(selection)       
+           selection.append(feature)
     return selection
 
+def get_features_array(features, feature_attribute):
+    selection = [] 
+    for feature in features:
+        value = feature.attribute(feature_attribute[0])
+        if value == feature_attribute[1]:
+            selection.append(feature)
+    return selection
+
+
+def select_features(layer, features):
+    selection = []
+    for feature in features:
+        selection.append(feature.id())
+    layer.setSelectedFeatures(selection)
+    return 
+    
 
 # Se carga la capa de PROPIEDADES_RodrigoFacio del mapa
 fincas_layer = load_layer("Shapefiles_RodrigoFacio/PROPIEDADES_RodrigoFacio.shp", "Fincas", "ogr", "#58a9f0")
@@ -75,9 +78,9 @@ calles_layer = load_layer("Shapefiles_RodrigoFacio/CALLES_RodrigoFacio.shp", "Ca
 continue_execution = True
 
 #while continue_execution:    
-#    response = PyQt4.QtGui.QInputDialog.getText(None, "Salir", "Presione ESC para salir.")
-#    continue_execution = response[1]
+ #   response = PyQt4.QtGui.QInputDialog.getText(None, "Salir", "Presione ESC para salir.")
+  #  continue_execution = response[1]
 
-# Se eliminan todas las capas 
+#Se eliminan todas las capas 
 #clear_all_layers()
 print "Bye bye!"
