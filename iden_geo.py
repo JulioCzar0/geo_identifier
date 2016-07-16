@@ -83,4 +83,5 @@ continue_execution = True
 
 #Se eliminan todas las capas 
 #clear_all_layers()
-print "Bye bye!"
+
+print "Baia baia!"
